@@ -1,0 +1,167 @@
+<HTML>
+<!--  cs314recurb.html          G. Novak           10 Aug 15    -->
+<!--    -->
+<HEAD>
+  <TITLE>CS 314 Assignment 3: More Recursion and Lists</TITLE>
+</HEAD>
+<BODY>
+
+<H2>CS 314 Assignment 3: More Recursion and Lists</H2>
+
+<H3>Due: September 24, 2015.</H3>
+
+<B>Files:</B> <tt>Cons.java</tt> &nbsp; <tt>test3.lsp</tt>
+
+<P>
+This assignment may be done in Java or in Lisp.
+<P>
+
+<OL>
+
+<LI> Write functions that find the <TT>sum</TT>, <TT>mean</TT> or average
+(mean = (sum x<SUB>i</SUB>) / n),
+<TT>meansq</TT> (mean square = (sum x<SUB>i</SUB><SUP>2</SUP>) / n),
+<TT>variance</TT>, and
+<TT>stddev</TT> (standard deviation) of a list of <TT>Integer</TT>.
+<TT>sum</TT> should be <TT>int</TT>, while the others should be
+<TT>double</TT>.
+The variance is equal to the mean square minus the square of the mean
+(= mean<SUP>2</SUP>).
+The standard deviation is the square root of the variance.
+Calculate these values for the following list of numbers:
+<P>
+<PRE>
+   (95 72 86 70 97 72 52 88 77 94 91 79 61 77 99 70 91)
+</PRE>
+
+<LI>  The sine function can be computed from its Taylor 
+series expansion:
+<PRE>
+          1    3    5    7    9
+         x    x    x    x    x
+sin(x) = -- - -- + -- - -- + -- - ...
+         1!   3!   5!   7!   9!
+</PRE>
+Write a function <TT>double sine(double x)</TT> to compute sine
+using this series.  You may not use the functions <TT>Math.pow</TT>
+or <TT>factorial</TT>;
+instead, write a tail-recursive auxiliary function to compute each 
+term of the series from the previous term and add it to the 
+sum.  Stop after the 21st power of x.  Hint: write down how
+each term of the series differs from the previous term.
+<P>
+<LI> Write a recursive function <TT>nthcdr(int n, Cons lst)</TT>
+that returns <TT>lst</TT> after applying <TT>rest</TT> to it
+<TT>n</TT> times.  If there are fewer than <TT>n</TT> items
+in <TT>lst</TT>, return <TT>null</TT>.
+<P>
+<LI> Write a function <TT>elt(Cons lst, int n)</TT> that retrieves
+the <TT>n</TT><SUP>th</SUP> item in the list, the first item being numbered
+<TT>0</TT>.  This allows a list to be used like an array; how does
+its Big O compare with array access?
+<P>
+<LI> Write a function <TT>double interpolate(Cons lst, double x)</TT>
+that will make <TT>lst</TT>, a list of <TT>Integer</TT>, appear to be a
+continuous function by linearly interpolating for values of <TT>x</TT>.
+Assume that the first element of the list is the value for <I>x = 0</I>,
+the second element is the value for <I>x = 1</I>, etc.  For cases where
+<I>i &le; x &lt; i+1</I>, let <I>delta = (x - i)</I> and compute the value
+<I>f(x) = lst(i) + delta * (lst(i+1) - lst(i))</I> , where <I>lst(i)</I>
+denotes the <I>i</I>th element of the list <TT>lst</TT>.
+<P>
+For example, suppose that <TT>lst</TT> <I>=</I> <TT>(0 30 56 78 96 ...)</TT>.
+The value for <I>x = 3</I> is 78, and the value for <I>x = 4</I> is 96.
+<TT>interpolate(lst, 3.4)</TT> = 85.2, i.e., <I>78 + .4 * (96 - 78) </I>.
+<P>
+<IMG SRC="cs307asg09.gif"> <IMG SRC="binomial.gif"> 
+<P>
+Use your <TT>interpolate</TT> function to make the <TT>binomial</TT>
+coefficient list for <TT>n = 12</TT> look like a function.
+What is the shape of this curve?
+<P><a href="http://en.wikipedia.org/wiki/Interpolation">
+http://en.wikipedia.org/wiki/Interpolation</a>
+
+<LI> Write a recursive function <TT>sumtr(Cons lst)</TT>
+that adds all the numbers in <TT>lst</TT>.
+The list <TT>lst</TT> may contain not only <TT>Integer</TT>, but
+also sublists, recursively.  Your function should sum the values
+in the sublists also.  You may assume that the only things in a list are
+<TT>Integer</TT> and sublists; you can recognize a sublist because
+<TT>consp</TT> will be <TT>true</TT>.
+<PRE>
+   (sumtr '(1 (2 3) ((4 5) 6)))  =>  21
+</PRE>
+
+<LI> Write a function <TT>subseq(Cons lst, int start, int end)</TT>
+that returns a new list that is a sub-sequence of <TT>lst</TT>
+beginning with the item numbered <TT>start</TT> and including
+items through <TT>end - 1</TT>.  We will assume that the input
+<TT>lst</TT> contains enough elements.
+<PRE>
+   (subseq '(0 1 2 3 4 5 6)  2  5)  =>  (2 3 4)
+</PRE>
+
+<LI> A <I>filter</I> is a function that allows desired elements
+to pass through, while removing undesired elements.
+Write a recursive function <TT>posfilter(Cons lst)</TT> that
+returns a new list containing only the non-negative values in
+<TT>lst</TT>, a list of <TT>Integer</TT>, in the same order as in
+the original list.
+<PRE>
+   (posfilter '(3 17 -2 0 -3 4 -5 12))  =>  (3 17 0 4 12)
+</PRE>
+
+<LI> A <I>predicate</I> is a <TT>boolean</TT> function, which
+tests its argument and returns <TT>true</TT> or <TT>false</TT>.
+Write a recursive function <TT>subset(Predicate p, Cons lst)</TT>
+that returns a new list containing only the values in
+<TT>lst</TT> that satisfy the predicate <TT>p</TT>.  In mathematical
+notation, this would be written { x &isin; lst | p(x) }, pronounced
+<I>the set of x in lst such that p(x)</I>.
+We will
+assume that <TT>p.pred(item)</TT> can be used to test an item.
+The output list should be in the same order as the original list.
+<P>
+If we assume that the predicate <TT>myp</TT> tests for integers
+&gt; 3, then:
+<PRE>
+   (subset 'myp '(3 17 -2 0 -3 4 -5 12))  =>  (17 4 12)
+</PRE>
+
+
+<LI> A <I>mapping</I> relates an element of a set, called its
+<I>domain</I>, to an element of another set, called its <I>range</I>;
+we write <I>M: D &rarr; R</I>.
+Write a recursive function <TT>mapcar(Functor f, Cons lst)</TT>
+that returns a new list containing the results of applying
+<TT>f.fn(item)</TT> to each item in the list <TT>lst</TT>.
+The output list should be in the same order as the original list.
+<P>
+If we assume that the functor <TT>myf</TT> adds 2 to an <TT>Integer</TT>,
+<PRE>
+   (mapcar 'myf '(0 1 2 3 4 5 6))  =>  (2 3 4 5 6 7 8)
+</PRE>
+
+<LI> Write a recursive function
+<TT>Object some(Predicate p, Cons lst)</TT>
+that returns the first item in <TT>lst</TT> that satisfies the
+predicate <TT>p</TT>.  In mathematical notation, this would be
+written &exist; x &nbsp; p(x), and pronounced <I>there exists an x
+such that p(x)</I> or <I>for some x, p(x)</I>.
+<PRE>
+   (some 'myp '(3 17 -2 0 -3 4 -5 12))  =>  17
+</PRE>
+<P>
+<LI> Write a recursive function
+<TT>boolean every(Predicate p, Cons lst)</TT>
+that tests whether every item in <TT>lst</TT> satisfies the
+predicate <TT>p</TT>.  In mathematical notation, this would be
+written &forall; x &nbsp; p(x), and pronounced <I>for all x, p(x)</I>.
+<PRE>
+   (every 'myp '(3 17 -2 0 -3 4 -5 12))  =>  false
+</PRE>
+
+</OL>
+</BODY>
+
+</HTML>

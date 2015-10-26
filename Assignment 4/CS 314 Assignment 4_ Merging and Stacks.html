@@ -1,0 +1,107 @@
+<HTML>
+<!--  cs314merge.html          G. Novak           10 Aug 15    -->
+<!--    -->
+<HEAD>
+  <TITLE>CS 314 Assignment 4: Merging and Stacks</TITLE>
+</HEAD>
+<BODY>
+
+<H2>CS 314 Assignment 4: Merging and Stacks</H2>
+
+<H3>Due: October 1, 2015.</H3>
+
+<B>Files:</B> <tt>Cons.java</tt> &nbsp; <tt>Account.java</tt> &nbsp;
+ <tt>test4.lsp</tt>
+
+<P>
+This assignment may be done in Java or in Lisp (except item 2) .
+<P>
+
+<OL>
+
+<LI> Write the functions <TT>union</TT> and <TT>setDifference</TT>,
+using the merge technique, to perform these functions on sets
+represented as lists.  You may use the <TT>llmergesort</TT> function to
+sort the lists first.  We will assume that the elements of the
+lists support the operations <TT>.compareTo()</TT> and <TT>.equals()</TT>.
+<P>
+
+<LI> Write a function <TT>Cons bank(Cons accounts, Cons updates)</TT>
+that uses the merge technique to update a list of bank accounts.
+Both <TT>accounts</TT> and <TT>updates</TT> have elements of type
+<TT>Account</TT>, with access functions <TT>String name()</TT> and
+<TT>Integer amount()</TT>.  We will assume that <TT>accounts</TT> is
+already sorted by name, but <TT>updates</TT> is not sorted.  A given
+name will appear only once in <TT>accounts</TT>, but may have multiple
+entries in <TT>updates</TT>.
+<P>
+The function <TT>bank</TT> should update a customer's bank balance
+by adding the amount of each update to it.  The output should be
+a new sorted list of accounts with updated balances; make a new
+<TT>Account</TT> with the new information.
+<P>
+You will need to write the <TT>.compareTo()</TT> method for an
+<TT>Account</TT> to properly sort the updates.  The first criterion
+for sorting is the <TT>name</TT>, which should be in alphabetic order.
+Within the same <TT>name</TT>, updates must be sorted by <TT>amount</TT>.
+In order to avoid falsely signaling overdrafts, the bank must process
+all deposits before any withdrawals.  Therefore, any positive
+<TT>amount</TT> must be sorted before any negative <TT>amount</TT>.
+The bank also wants to sort the negative amounts so that the largest
+withdrawals (most negative amounts) are processed first, to cause
+the largest possible number of overdrafts and overdraft fees for the
+bank.  (Yes, this is evil; but it is what the banks actually have been doing.
+<A href="http://www.huffingtonpost.com/2010/08/11/wells-fargo-overdraft-law_n_679178.html">
+http://www.huffingtonpost.com/2010/08/11/wells-fargo-overdraft-law_n_679178.html</A>
+)
+<P>
+For each update that causes an overdraft, print a message stating so, with the
+name and final amount.  Go ahead and update the account, making the
+account balance negative, and subtract <TT>30</TT> from the balance
+as an overdraft fee for each overdraft transaction.
+<P>
+If a <TT>name</TT> does not exist for an account and the total
+<TT>amount</TT> of all updates for that <TT>name</TT> is positive,
+create a new account for that name.
+Print a message that there is a new account, with a name and amount.
+<P>
+If a <TT>name</TT> does not exist for an account and the total
+<TT>amount</TT> of all updates for that <TT>name</TT> is zero or
+negative, print a message that there is no account
+and the name and amount, but otherwise ignore the update.
+<P>
+
+<LI> Write a program
+<TT>String [] mergearr(String [] x, String [] y)</TT> that will
+merge two sorted arrays <TT>x</TT> and <TT>y</TT> to produce a
+new array in ascending sorted order.  If there are duplicated items,
+the duplicates should all appear in the output.
+<P>
+
+<LI> Write a program <TT>boolean markup(Cons text)</TT> that will
+check a text in a markup language (such as HTML or XML) to see
+if it is well-formed.  The list <TT>text</TT> is a list of
+<TT>String</TT>.  Some strings are markup tags, such as
+<TT>&quot;&lt;TT&gt;&quot;</TT> or <TT>&quot;&lt;/TT&gt;&quot;</TT>,
+and other strings are ignored for checking purposes.  You may
+assume that any string that begins with <TT>&lt;</TT> is a tag.
+Every opening tag should be matched by a closing tag, indicated by
+<TT>/</TT> ; we will assume that tag pairs may be nested to a depth
+up to 100.
+<P>
+If a list is well-formed, return <TT>true</TT>; if there is a
+tag out of place, print a message with the offending tag, its
+numeric position in the list (starting with 0), and the correct
+tag that was expected, and return <TT>false</TT>.
+<P>
+An example of XML is:
+<A href="http://www.comptechdoc.org/independent/web/xml/guide/xmlexample.html">
+http://www.comptechdoc.org/independent/web/xml/guide/xmlexample.html</A>
+
+<PRE>
+</PRE>
+
+</OL>
+</BODY>
+
+</HTML>

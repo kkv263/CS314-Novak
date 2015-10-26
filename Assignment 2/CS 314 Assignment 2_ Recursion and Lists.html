@@ -1,0 +1,143 @@
+<HTML>
+<!--  cs314recur.html          G. Novak           04 Sep 15    -->
+<!--    -->
+<HEAD>
+  <TITLE>CS 314 Assignment 2: Recursion and Lists</TITLE>
+</HEAD>
+<BODY>
+
+<H2>CS 314 Assignment 2: Recursion and Lists</H2>
+
+<H3>Due: September 17, 2015 via Canvas.</H3>
+
+<B>Files:</B> <tt>Cons.java</tt> &nbsp; <tt>test2.lsp</tt>
+
+<P>
+This assignment may be done in Java or in Lisp.
+<P>
+
+<OL>
+<LI> Write a recursive function <TT>sumsq(int n)</TT> that adds up
+the squares of the integers from <TT>1</TT> through <TT>n</TT>.
+<P>
+<LI> Giuseppe Peano (1858 - 1932) showed that all
+arithmetic operations on natural numbers (nonnegative integers) could be
+reduced to a single constant (0) and an operation <I>successor</I>, which
+is available in Java as <TT>++</TT> (in Lisp, <TT>1+</TT>).
+<!--
+<BLOCKQUOTE>
+Peano was one of the first to use what we now call symbolic logic.
+He introduced, for instance, the use of the symbols `(E x)' to mean
+`there is an x such that'; and he habitually wrote out all of his
+lecture notes in his new symbolism.  He was teaching at a military
+academy at the time, and his students were so incensed by his
+formalistic approach to mathematics that they rebelled (despite his
+promises to pass them all) and got him fired.  Subsequently he found a
+more congenial setting at the University of Turin.  -- Rudy Rucker,
+<I> Goedel's Incompleteness Theorems</I>, p. 289.
+</BLOCKQUOTE>
+    -->
+<P>
+Write a recursive function <TT>peanoplus(int x, int y)</TT>,
+using only <TT>++</TT> and <TT>--</TT>, to perform addition according
+to the following definition: <BR>
+
+&nbsp; peanoplus(x, y) = x, if y = 0; peanoplus(x + 1, y - 1), otherwise.
+<P>
+Note that the <TT>++</TT> and <TT>--</TT> operators must appear
+<I>before</I> the operands in the recursive call, so that the
+change will be made before the call; otherwise, the change will
+be made after the call, causing an infinite loop.
+<P>
+We can think of <TT>peanoplus</TT> as similar to an algorithm for adding
+together buckets of rocks: if the second bucket is empty, stop; otherwise
+move one rock from the second bucket to the first bucket and continue.
+<P>
+Can you think of an <I> invariant</I> (property that is always true)
+of <TT>peanoplus</TT>?  What is the Big O of <TT>peanoplus</TT>?
+This function is naturally <I>tail-recursive</I>.
+<P>
+<LI> Write a function <TT> peanotimes(int x, int y)</TT> that multiplies
+two integers using only
+<TT> peanoplus</TT>, <TT>++</TT>, and <TT>--</TT>,
+and is written in a recursive style similar to that of <TT>peanoplus</TT>.
+What is the Big O of <TT>peanotimes</TT>?
+<P>
+<LI> The mathematical notation <IMG SRC="cs307nka.gif" ALIGN=center>,
+read <I>n choose k</I>,
+is used to denote the number of distinct subsets of <I>k</I> items that can be
+chosen from a set of <I>n</I> distinct objects.  It can be shown that:
+<P>
+<IMG SRC="cs307nkb.gif">
+<P>
+Although the <TT>factorial</TT> function could be used in implementing
+<I>n</I> choose <I>k</I>, this would be inefficient for large values of
+<I>n</I> and small <I>k</I>.  We have also seen that <TT>factorial</TT>
+quickly overflows the available accuracy of the basic types in Java.
+<I>n</I> choose <I>k</I> has the value <I>1</I> when <I>k = 0</I>.
+We can algebraically rewrite the definition into the following form for
+<I>k &gt 0</I>:
+<P>
+<IMG SRC="cs307nkc.gif">
+<P>
+Write a function <TT>choose(int n, int k)</TT>, using a tail-recursive
+auxiliary function, to compute <I>n</I> choose <I>k</I> without using the
+<TT>factorial</TT> function.  Note that the above equation has <I>k</I>
+terms in both the numerator and the denominator; multiply by the numerator
+term before dividing by the denominator term to ensure that the numerator
+is evenly divisible by the denominator term.
+
+<!--    Can you prove that the result of your auxiliary function
+is always an integer?  This would be a good invariant for
+your recursive function: although non-integer intermediate results will
+work in Lisp, they would not work in most languages.  -->
+<P>
+<LI> Write functions <TT>sumlist(Cons lst)</TT> to add up a list of
+<TT>Integer</TT>.
+Iterative versions <TT>sumlist</TT> and <TT>sumlistb</TT> are given.
+Write other versions of this function:
+<TT>sumlistr</TT> (recursive), and <TT>sumlisttr</TT> (tail-recursive
+using an auxiliary function).
+<P>
+<LI> Write a function <TT>sumsqdiff(Cons lsta, Cons lstb)</TT> to sum
+squared item-by-item differences
+&Sigma;(<I>x<SUB>i</SUB> - y<SUB>i</SUB></I>)<SUP><I>2</I></SUP>
+of two lists of
+<TT>Integer</TT>.  Write several versions of this function: iterative,
+recursive, and tail-recursive using an auxiliary function.
+<P>
+<LI> Write a function <TT>maxlist(Cons lst)</TT> to find the maximum value
+in a list of <TT>Integer</TT>.  Write several versions of this function:
+iterative, recursive, and tail-recursive using an auxiliary function.
+<P>
+<LI> Binomial coefficients are the numeric factors of the products
+in a power of a binomial such as (<I>x + y</I>)<SUP><I>n</I></SUP>.
+For example,
+<I> (x + y)<SUP>2</SUP>   =   x<SUP>2</SUP> + 2 x y + y<SUP>2</SUP> </I>
+has the coefficients <TT> 1 2 1</TT>.  Binomial coefficients can be
+calculated using Pascal's triangle:
+<PRE>
+            1                   n = 0
+         1     1
+      1     2     1
+   1     3     3     1
+1     4     6     4     1       n = 4
+</PRE>
+<P>
+Each new level of the triangle has <TT>1</TT>'s on the ends; the interior
+numbers are the sums of the two numbers above them.  Write a program
+<TT>binomial(int n)</TT> to produce a list of binomial coefficients for
+the power <TT>n</TT> using the Pascal's triangle technique.
+For example, <TT>binomial(2)</TT> = <TT>(1 2 1)</TT>.
+You may write additional auxiliary functions as needed.
+<TT>binomial</TT> should be a recursive program that manipulates lists;
+it should not use <TT>(choose n k)</TT>.
+Use the function <TT>(choose n k)</TT> that you wrote earlier to
+calculate <TT>(choose 4 k)</TT> for <TT>k</TT> from <TT>0</TT> through
+<TT>4</TT>; what is the relationship between these values and the
+binomial coefficients?
+
+</OL>
+</BODY>
+
+</HTML>

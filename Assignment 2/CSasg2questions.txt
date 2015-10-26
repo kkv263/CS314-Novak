@@ -1,0 +1,13 @@
+Kevin Vu
+KKV263
+CS314: Data Structures
+
+Questions asked in Assignment 2
+  2. Can you think of an invariant (property that is always true) of peanoplus? What is the Big O of peanoplus?
+  	-Because its recursion, it will be called y number of times. The Big O is O(n)
+  3. What is the Big O of peanotimes?
+  	-The Big O of peanotimes is O(n^2) because peanoplus used peanotimes y times, and peanoplus is ran y 
+	number of times. so y*y = y^2
+  8. What is the relationship between the (choose n k) values and the binomial coeffiecients?
+	-each row is calculated using the (choose n k) formula. Each space in each row ranges from 0 to n.
+	For example if n = 4, then (1 4 6 4 1) are the answers to C(4,0), C(4,1), C(4,2)... C(4,n)
