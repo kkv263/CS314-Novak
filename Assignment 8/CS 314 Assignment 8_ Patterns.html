@@ -1,0 +1,141 @@
+<HTML>
+<!--  cs314pats.html          G. Novak           10 Aug 15    -->
+<!--    -->
+<HEAD>
+  <TITLE>CS 314 Assignment 8: Patterns</TITLE>
+</HEAD>
+<BODY>
+
+<H2>CS 314 Assignment 8: Patterns</H2>
+
+<H3>Due: November 5, 2015.</H3>
+
+<B>Files:</B> <tt>Cons.java</tt> &nbsp; <tt>patmatch.lsp</tt>
+ &nbsp; <tt>patterns.lsp</tt> &nbsp; <tt>patm.lsp</tt> &nbsp; <tt>test8.lsp</tt>
+
+<P>
+Some functions that you may need are provided in the file
+<tt>Cons.java</tt>, and you will need some of your functions from the
+last assignment.  This assignment may be done in Java or in Lisp.
+
+<OL>
+
+<P><LI> Physical principles often are described by sets of equations.
+Since the <tt>solve</tt> function from the previous assignment is able
+to solve a single equation, we would like to extend it to solve problems
+involving multiple equations.
+<P>
+Write a function <tt>Double solveqns(Cons eqns, Cons vals, String v)</tt> that
+attempts to solve the list of equations <tt>eqns</tt> for variable <tt>v</tt>
+given an association list of values <tt>vals</tt>.
+<OL>
+<LI> If the desired variable has a value defined in <tt>vals</tt>,
+the problem is solved, and the value can be returned.
+
+<P><LI> Otherwise, look through the list of equations to see if there
+is an equation that has <I>exactly one</I> unknown.  If so, the equation
+can be solved for that variable using <tt>solve</tt>, and the value of the
+variable can be found using <tt>eval</tt>.  Add the new variable and value
+to <tt>vals</tt> and call <tt>solveqns</tt> recursively to try again.
+
+<P><LI> If all the equations have been examined and none of them can be
+solved, return <tt>null</tt>.
+</OL>
+
+<P> Use your program to answer the following questions.  Input data is
+provided in the test file.
+<OL>
+<LI> What is the terminal voltage of a battery with a current of 0.3 amp
+and internal resistance of 4 ohms and voltage of 12 volts ?
+<!--  10.8 volts   -->
+
+<LI> What is the angular momentum of a circular motion with radius 4 m
+and mass 2 kg and velocity 3 m/s ?
+<!--  24 kg m^2 / sec   -->
+
+<LI> What is the magnification of a converging lens with
+ subject distance = 6 cm and focal length = 9 cm ?
+<!--  3   -->
+
+<LI> What is the power of a lift with weight 700 nt and height 8 m and
+time 10 sec ?
+<!-- 560 watt   -->
+</OL>
+See <A href="http://www.cs.utexas.edu/users/novak/cgi/physdemoc.cgi">
+<tt>http://www.cs.utexas.edu/users/novak/cgi/physdemoc.cgi</tt></A>.
+
+<P><LI> It is important to know the design patterns for algorithms,
+since a large part of application programs is composed of instances
+of standard design patterns.  <tt>sublis</tt> can be used to instantiate
+design patterns to form working programs.
+<P>
+The test file contains the Lisp design pattern for binary tree recursion
+(class notes,
+<A href="http://www.cs.utexas.edu/users/novak/cs314135.html">page 135</A>).
+Make substitution lists (in the list
+<tt>substitutions</tt>) to instantiate this
+design pattern to make the following functions; an example for the function
+<tt>addnums</tt> is provided.
+<OL>
+<LI> <tt>countstrings</tt> &nbsp; &nbsp; Count the number of strings
+in a tree.
+<LI> <tt>copytree</tt> &nbsp; &nbsp; Make a copy of a tree structure.
+<LI> <tt>mintree</tt> &nbsp; &nbsp; Find the smallest numeric value
+in a tree.
+You may assume a function (min x y) that returns the lesser of x and y,
+and that all values in the tree are less than 999999.
+<LI> <tt>conses</tt> &nbsp; &nbsp; Find the number of conses in a tree.
+You may assume
+an auxiliary function (add1 x y) that adds 1 to the sum of x and y.
+</OL>
+
+<P><LI> Pattern matching and substitution together can transform an
+expression into a new expression.  This is a powerful form of computation.
+<P>
+Add patterns to the list <tt>optpats</tt> to perform optimization
+of algebraic expressions.  Some examples of expressions to be optimized
+are given in the test file.  You will find that the derivative patterns
+for the next part of the assignment produce a lot of things that need
+to be optimized; add patterns to get good results for derivatives.
+
+<P><LI> Add patterns to the list <tt>derivpats</tt> to perform differentiation
+of algebraic expressions.  Calculus books contain lists of derivative
+formulas; you can also consult
+<A href="http://www.mathsisfun.com/calculus/derivatives-rules.html">
+<tt>http://www.mathsisfun.com/calculus/derivatives-rules.html</tt></A> or
+<A href="http://en.wikipedia.org/wiki/Differentiation_rules">
+<tt>http://en.wikipedia.org/wiki/Differentiation_rules</tt></A> or
+<A href="http://www.cs.utexas.edu/users/novak/asg-symdif.html">
+<tt>http://www.cs.utexas.edu/users/novak/asg-symdif.html</tt></A> for a list
+of formulas.
+
+<P><LI> Programming languages are usually described using context-free
+grammars, which generate trees.  Since Lisp programs are trees made of list
+structure using <tt>cons</tt> cells, it is fairly easy to transform Lisp
+code into code in a language such as Java using patterns.  In effect, the
+patterns are a grammar for Java.  We will use a set of restructuring
+patterns (provided) and a list of patterns to transform Lisp code
+to Java syntax.  Add patterns to the list <tt>javapats</tt>
+to translate the code examples given in the test file.  A printing program
+is provided to print the output from list structure.
+<P>
+You may use the following special codes for printing of special characters:
+
+<UL>
+<LI> <TT>zspace</TT> Space
+<LI> <TT>zlparen</TT> Left parenthesis
+<LI> <TT>zrparen</TT> Right parenthesis
+<LI> <TT>ztab</TT> Tabs are cumulative, and can be used to indent the code
+<LI> <TT>zuntab</TT> Decrements the number of tabs
+<LI> <TT>zreturn</TT> Return or new line
+<LI> <TT>znothing</TT> does nothing, but can prevent unwanted matching
+of a pattern.
+</UL>
+<P>
+The final part of the driver program calls the Java translator on the
+functions made using the design pattern in question 2.  This illustrates
+how transformations on trees using substitutions and patterns can
+be used to produce code in a standard programming language.
+</OL>
+</BODY>
+</HTML>
