@@ -1,0 +1,274 @@
+<HTML>
+<!--  cs314.html          G. Novak           10 Aug 15    -->
+<!--    -->
+<HEAD>
+  <TITLE>CS 314 Assignment 9: Memos and Music</TITLE>
+</HEAD>
+<BODY>
+
+<H2>CS 314 Assignment 9: Memos and Music</H2>
+
+<H3>Due: November 17, 2015.</H3>
+
+<B>Files:</B> <tt>Cons.java</tt> &nbsp; 
+ <tt>Cons.jfugue.java</tt> &nbsp; <tt>Event.java</tt> &nbsp;
+&nbsp; <tt>mariagedamour.java</tt> &nbsp; &nbsp;
+<tt>patmatch.lsp</tt> &nbsp; <tt>patterns.lsp</tt> &nbsp; <tt>patm.lsp</tt>
+
+<P>
+Some functions that you may need are provided in the file
+<tt>Cons.java</tt>, and you will need some of your functions from the
+last assignment.  Question 1 may be done in Java or in Lisp; the rest
+should be done in Java.
+
+<OL>
+
+<P><LI> Write a recursive function <tt>Object solve(Cons e, String v)</tt> that
+solves the equation <tt>e</tt> for variable <tt>v</tt>,
+which we assume occurs at most once in <tt>e</tt>.
+<P>
+This function does the same thing as the earlier version of
+<tt>solve</tt>; in this version, use patterns to rewrite the given
+expression.  The base cases are the same as before, and you
+can copy your code for those cases.
+<OL>
+<LI> If the left-hand side (lhs) of <tt>e</tt> is <tt>v</tt>, return <tt>e</tt>.
+<PRE>
+   (solve '(= f (* m a)) 'f)  =>  (= f (* m a))
+</PRE>
+
+<LI> If the right-hand side (rhs) of <tt>e</tt> is <tt>v</tt>, return <tt>e</tt>
+with its arguments reversed.
+<PRE>
+   (solve '(= (* m a) f) 'f)  =>  (= f (* m a))
+</PRE>
+
+<LI> If the rhs is not <tt>v</tt> and not a Cons, return <tt>null</tt>.
+
+<P><LI> If the rhs of <tt>e</tt> is a Cons (i.e. an operation), try to
+solve the equation by applying algebraic transformations from a list
+of patterns, <tt>algpats</tt>.  For each pattern in the list, try
+to <tt>transform</tt> the expression <tt>e</tt> using the pattern.
+If the transformation works (is not <tt>null</tt>), call <tt>solve</tt>
+recursively on the transformed version of <tt>e</tt>; if the result of
+<tt>solve</tt> is not <tt>null</tt>,
+return that result.  Otherwise, continue through the list of patterns.
+If all patterns have been tried, return <tt>null</tt>.
+</OL>
+<P>
+An initial list of patterns is provided; add patterns to complete the set.
+
+
+<P><LI> Write a method <tt>hashCode()</tt> for the class <tt>Cons</tt>.
+The <tt>hashCode</tt> of a Cons should be the XOR of the
+<tt>hashCode</tt> of the <tt>first</tt> times <tt>17</tt> and the
+<tt>hashCode</tt> of the <tt>rest</tt> times <tt>127</tt>.
+The <tt>hashCode</tt> of <tt>null</tt> should be 0; use an
+auxiliary function to make sure that you do not try to call
+<tt>hashCode()</tt> on <tt>null</tt>, which would cause a runtime
+exception.
+
+
+<P><LI> Write a class <tt>Memoizer</tt> (in a file <tt>Memoizer.java</tt>)
+that implements memoization of a function call.  Memoization is a
+technique for wrapping an expensive function with a memory structure
+that remembers previously computed values of the function.  If the
+function is called again with the same argument value, it will be
+cheaper to look up the saved value than to recompute it.
+<P>
+The class should be created using <tt>new Memoizer(Functor f)</tt>
+where <tt>f</tt> is a functor that wraps the function associated
+with the memoizer.
+<P>
+Use a <tt>HashMap</tt> within the <tt>Memoizer</tt> to associate
+function values with argument values.  You can Google "java hashmap"
+to get documentation of a <tt>HashMap</tt>.
+<P>
+<tt>Memoizer</tt> should have a method <tt>Object call(Object x)</tt>
+to perform the wrapped function call.
+The <tt>call</tt> method should operate as follows:
+<OL>
+<LI> First, <tt>call</tt> should look up the parameter <tt>x</tt>
+in the <tt>HashMap</tt>; if it is present, return the value associated
+with <tt>x</tt> (without calling the <tt>Functor</tt>).
+
+<P><LI> Otherwise,
+<OL><LI> Call the <tt>Functor</tt> to compute the value of <tt>fn(x)</tt>.
+    <LI> Add the value <tt>fn(x)</tt> to the <tt>HashMap</tt> for the
+     key <tt>x</tt>.
+    <LI> Return the value <tt>fn(x)</tt>.
+</OL>
+</OL>
+<P>
+Reference: <A href="http://en.wikipedia.org/wiki/Memoization">
+ <tt>http://en.wikipedia.org/wiki/Memoization</tt> </A>
+
+<P><LI> An Austin company is making a digital piano, drum and percussion
+synthesizer, and they have hired you to write the software.  Since
+musicians are not always good programmers, the input language
+that is used to specify a music pattern needs to be simple.  The
+software needs to convert the specified pattern into a time
+sequence of I/O commands to drive the synthesizer units.
+Since music is a language, we expect that a music program will be
+structured as a tree.
+<P>
+The synthesizer driver program is implemented as a
+discrete-event simulator, based on a <tt>PriorityQueue</tt>.
+You can Google "java priorityqueue"
+to get documentation of a <tt>PriorityQueue</tt>.
+<P>
+A discrete-event simulator processes a sequence of <I>events</I>
+which are scheduled at particular clock times.  The
+<tt>PriorityQueue</tt> is used to hold the pending events, with the
+priority being the time at which an event is scheduled to occur.
+In operation, the simulator removes the highest-priority
+(smallest time value) event from the queue, sets the current time
+to the time of the event, and executes it;
+the event will typically perform some action, and it may schedule
+other events for the future.  The simulation stops if the queue
+becomes empty.
+<P>
+We will assume that time values are integers.  Events that occur
+at the same integer time are considered to be simultaneous,
+regardless of their order, since the computer is much faster
+than the music output.  A time duration of 1 represents a 1/16
+note duration.
+<P>
+An <tt>Event</tt> has a scheduled <tt>.time()</tt> and an
+<tt>.action()</tt>; this class is provided.  An action is a list,
+consisting of a command followed by parameters; usually there
+is only one parameter, the length of time the command lasts.
+An event is added to the queue by the call
+<tt>addevent(PriorityQueue pq, Cons action, int time)</tt> .
+<P>
+Execution of a command
+may emit an I/O command to the synthesizer.  Write a function
+<tt> execute(PriorityQueue pq, Cons act, int time)</tt>
+that executes an action by emitting appropriate commands.
+<P>
+The function <tt>emit(instrument, time, duration)</tt> sends
+a command to an instrument; the arguments are all <tt>int</tt>.
+The <tt>instrument</tt> values are as follows:
+<TABLE>
+<TR><TD>4</TD><TD>[bass_drum]</TD><TD>boom</TD></TR>
+<TR><TD>5</TD><TD>[acoustic_snare]</TD><TD>snare</TD></TR>
+<TR><TD>6</TD><TD>[pedal_hi_hat]</TD><TD>hat</TD></TR>
+<TR><TD>7</TD><TD>[crash_cymbal_1]</TD><TD>cymbal</TD></TR>
+<TR><TD>8</TD><TD>[cowbell]</TD><TD>cowbell</TD></TR>
+<TR><TD>9</TD><TD>[ride_bell]</TD><TD>bell</TD></TR>
+<TR><TD>10</TD><TD>[hand_clap]</TD><TD>clap</TD></TR>
+<TR><TD>11</TD><TD>[tambourine]</TD><TD>tambourine</TD></TR>
+</TABLE>
+<P>
+Commands are as follows, with <tt>d</tt> representing the duration
+of the action; usually a duration should be a power of 2,
+except for <tt>rest</tt>.
+<UL>
+<LI> <tt>(rest d)</tt> does not emit anything, but has a time
+ duration of <tt>d</tt>.
+<LI> <tt>(boom d)</tt> emits a [bass_drum] (4) command.
+<LI> <tt>(snare d)</tt> emits a [acoustic_snare] (5) command.
+<LI> <tt>(hat d)</tt> emits a [pedal_hi_hat] (6) command.
+<LI> <tt>(cymbal d)</tt> emits a [crash_cymbal_1] (7) command.
+<LI> <tt>(cowbell d)</tt> emits a [cowbell] (8) command.
+<LI> <tt>(bell d)</tt> emits a [ride_bell] (9) command.
+<LI> <tt>(clap d)</tt> emits a [hand_clap] (10) command.
+<LI> <tt>(kaboom d)</tt> schedules <tt>(boom d/4)</tt> at
+ <tt>d/4</tt> past the current time, and schedules
+  <tt>(boom d/2)</tt> at <tt>d/2</tt> past the current time.
+ Thus, <tt>(kaboom d)</tt> is equivalent to
+<tt>(seq (rest d/4) (boom d/4) (boom d/2))</tt>.
+<LI> <tt>(tambourine d)</tt> multiplies its duration by a random number,
+obtained by calling <tt>random.nextDouble()</tt> ;
+if the integer result is &ge; 2, it schedules <tt>tambourine</tt> again with
+that amount as its duration, at the current time plus current duration
+minus that amount.  It emits a [tambourine] (11) command with a
+duration of 2 immediately.  (This random behavior simulates
+a tambourine player who smokes way too much weed.)
+<LI> <tt>(seq action<SUB>1</SUB> ... action<SUB>n</SUB>)</tt> schedules each of its actions
+to execute in sequence, one after the other.  <TT>seq</TT> thus makes a sequence
+of multiple actions look like a single action.  <TT>seq</TT> could either
+schedule all of its actions at once, starting with the current time
+and adding the time of each action, or it could schedule the first
+action and schedule a <TT>seq</TT> for the rest of the actions.
+<LI> <tt>(sync action<SUB>1</SUB> ... action<SUB>n</SUB>)</tt> schedules each of its actions
+for the current time.  <tt>sync</tt>
+represents synchronized execution of multiple subprograms.
+<LI> <tt>(repeat n action)</tt> schedules n events with the specified
+action.  The first of these n events will happen at the same time
+that repeat executes (i.e. simultaneously with repeat).  One way to
+accomplish this is to schedule the action immediately;
+then if n &gt; 1, schedule <tt>(repeat n-1 action)</tt> for the current
+time plus the time of the action.  Alternatively, repeat could simply
+schedule all n events at once; this would use more queue space if n
+is large.
+<LI> <tt>(piano voice note d)</tt> emits a piano command using
+the function <tt>emitp(voice, note, time, d)</tt>.
+A <tt>note</tt> is a string such as "C".  A note may specify
+an octave, such as "C5", and the note letter may be followed
+ by "#" or "b"
+for sharp and flat.  <tt>voice</tt> is an integer from 0 to 3.
+</UL>
+<P>
+Examples:
+<PRE>
+(seq (boom 4) (bell 4))
+
+(seq (repeat 2 (kaboom 4)) (repeat 3 (cymbal 2)))
+
+(repeat 2 (seq (piano 0 C5 4) (piano 0 D5 4) (piano 0 E5 4)))
+</PRE>
+<P>
+It will be helpful to write the <tt>totaltime()</tt> function (below) first.
+<P>
+<LI>
+Write a function <tt>int totaltime(Cons action)</tt> that calculates
+the total time required for an action.  For most actions, the time is
+simply the duration of the action.  A <tt>repeat</tt> action has a time
+that is the repeat count times the time of the sub-action.
+A <tt>seq</tt> action takes the sum of the times of its sub-actions.
+A <tt>sync</tt> action takes the maximum time of its sub-actions.
+
+<P>
+<LI> A <i>round</i> is "a musical composition in which two or more
+voices sing exactly the same melody" [Wikipedia].  Write a function
+<tt>Cons round( Cons melody )</tt> that will take a music program
+and make a round out of it.  We will assume that a round is formed
+by repeating the same melody with three different voices; the voice
+is indicated in the input melody by the variable <tt>?i</tt> and
+should be replaced by 0, 1, and 2 to form the three voices.
+The second voice is delayed by 1/4 the length of the melody,
+and the third voice is delayed by 1/2 the length of the melody.
+</OL>
+<P>
+The jFugue system,
+<A href="http://jfugue.org"><TT>http://jfugue.org</TT></A>,
+allows sounds
+to be produced from Java.  An interface has been written to
+allow the output of your program to produce sounds through
+jFugue.  Your program will not be any different whether you use
+jFugue or not; using jFugue may make debugging easier because
+you can hear whether the music sounds right.
+If you would like to use jFugue, download it from
+the class directory or the jFugue site and install it in the same
+directory that you use for your program.  Probably the easiest way
+to install jFugue is to download the <TT>.jar</TT> file and unpack
+it in the same directory with your program using
+<PRE>
+jar xf jfugue-4.0.3.jar
+</PRE>
+Use the file <TT>Cons.jfugue.java</TT> and rename it to be <TT>Cons.java</TT> .
+<P>
+<tt>mariagedamour.java</tt> is a file by a student that encodes the song
+<i>Mariage d'amour ;</i> this file can optionally be added inside the
+<tt>main()</tt> if you would like a longer piano piece.  Compare to
+<A href="http://www.youtube.com/watch?v=YCl-0lu0vHM">Richard Clayderman's
+version.</A>
+<P>
+Reference: <A href="http://en.wikipedia.org/wiki/Discrete_event_simulation">
+ <tt>http://en.wikipedia.org/wiki/Discrete_event_simulation</tt> </A>
+
+
+</OL>
+</BODY>
+</HTML>
