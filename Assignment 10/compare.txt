@@ -1,0 +1,81 @@
+Austin to Muleshoe :
+
+Dijkstra
+nodes = 63
+Road Distance austin to muleshoe = 452
+
+A* dist
+nodes = 11
+Road Distance austin to muleshoe = 452
+
+A* halfass
+nodes = 37
+Road Distance austin to muleshoe = 452
+
+A* zip
+nodes = 58
+Road Distance austin to muleshoe = 452
+
+A* randombs
+nodes = 58
+Road Distance austin to muleshoe = 452
+
+A* randomlies
+nodes = 79
+Road Distance austin to muleshoe = 492
+
+Prim
+pathcost austin to muleshoe = 501
+
+Laredo to Haskell :
+
+Dijkstra
+nodes = 63
+Road Distance laredo to haskell = 482
+
+A* dist
+nodes = 13
+Road Distance laredo to haskell = 482
+
+A* halfass
+nodes = 25
+Road Distance laredo to haskell = 482
+
+A* zip
+nodes = 45
+Road Distance laredo to haskell = 482
+
+A* randombs
+nodes = 45
+Road Distance laredo to haskell = 482
+
+A* randomlies
+nodes = 75
+Road Distance laredo to haskell = 605
+
+Dumas to Corsicana :
+
+Dijkstra
+nodes = 63
+Road Distance dumas to corsicana = 467
+
+A* dist
+nodes = 10
+Road Distance dumas to corsicana = 467
+
+A* halfass
+nodes = 25
+Road Distance dumas to corsicana = 467
+
+A* zip
+nodes = 32
+Road Distance dumas to corsicana = 467
+
+A* randombs
+nodes = 32
+Road Distance dumas to corsicana = 467
+
+A* randomlies
+nodes = 18
+Road Distance dumas to corsicana = 508
+
