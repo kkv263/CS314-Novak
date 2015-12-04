@@ -1,0 +1,144 @@
+<HTML>
+<!--  cs314mapr.html          G. Novak           10 Aug 15    -->
+<!--    -->
+<HEAD>
+  <TITLE>CS 314 Assignment 11: MapReduce</TITLE>
+</HEAD>
+<BODY>
+
+<H2>CS 314 Assignment 11: MapReduce</H2>
+
+<H3>Due: December 4, 2015.</H3>
+
+<B>Files:</B> <tt>Cons.java</tt> &nbsp; <tt>MapReduce.java</tt> &nbsp;
+<tt>file1.txt</tt> &nbsp; <tt>decind.txt</tt> &nbsp; <tt>movies.txt</tt>
+
+<P>
+This assignment should be done in Java.
+The purpose of this assignment is to gain experience with MapReduce
+programming.  MapReduce is used by Google for much of their
+processing of large data sets (terabytes of data).  Hadoop is an
+open-source version of MapReduce written in Java; it is available
+to commercial users through Amazon Web Services.
+For this assignment, we will use a simplified version of MapReduce;
+the way in which it is programmed is similar to Hadoop.
+<P>
+A MapReduce program has two basic components provided by the user, a
+<tt>Mapper</tt> and a <tt>Reducer</tt>; these in turn have methods 
+<tt>map</tt> and <tt>reduce</tt>.  The <tt>MapReduce</tt> class
+calls the methods and manages the data.
+<P>
+<tt>map</tt> has two arguments,
+a <tt>String key</tt> and a <tt>String value</tt>, plus the
+<tt>MapReduce mr</tt>.  For our purposes, the <tt>key</tt> will be
+a line number (sometimes used, sometimes not used), and the
+<tt>value</tt> will be a line of text.  <tt>map</tt> will emit
+zero or more items of data by calling <tt>mr.collect_map</tt> with
+arguments of a <tt>key</tt> and a <tt>value</tt> that is a list of one
+<tt>String</tt> (potentially more).
+Note that the <tt>key</tt> in the call to <tt>mr.collect_map</tt>
+is often different from the <tt>key</tt> parameter to the
+<tt>map</tt> method.  As an example, suppose that the mapper program
+detects some conditions in the lines of input text and wants to
+count those conditions; for condition foo, the call to emit this
+output would be <tt>mr.collect_map("foo", list("1"));</tt>  In this case,
+<tt>"foo"</tt> is the key, and the value is a list of one <tt>String</tt>
+value, in this case denoting one occurrence of foo.
+<P>
+The <tt>reduce</tt> method gets a <tt>key</tt> that is a <tt>String</tt>,
+and a <tt>value</tt> that is a list of lists of (usually one) <tt>String</tt>.
+The <tt>value</tt> contains all the values emitted for that <tt>key</tt>
+by the <tt>map</tt> method, collected into a single list.  The task
+of <tt>reduce</tt> is to produce an answer from the list of values
+and output that answer by calling <tt>mr.collect_reduce</tt> .  The answer
+is of type <tt>Cons</tt>, a list of the key and combined value.  As
+an example, if there are 3 occurrences of foo, the <tt>value</tt>
+would be <tt>(("1") ("1") ("1"))</tt> ; the quotation marks are shown
+here to emphasize that the values are <tt>String</tt> and must be parsed
+to get integer values, e.g. by <tt>Integer.decode()</tt>.  The final value
+might be a list <tt>("foo" 3)</tt>, where the <tt>3</tt> is the
+<tt>Integer</tt> combined value.
+<P>
+<OL>
+<LI> An example pair of methods to perform a line count of a file is
+provided.  This example simply emits
+<tt>mr.collect_map("line", list("1"));</tt> for each line.  The <tt>reduce</tt>
+method parses and adds the 1 counts, to emphasize this technique,
+although it could simply find the <tt>length</tt> of the list.
+<P>
+<LI> Write <tt>map</tt> and <tt>reduce</tt> methods to count the number
+of occurrences of each alphabetic character in a file.  The count for
+each letter should be case-insensitive (i.e., include both upper-case
+and lower-case versions of the letter).  Ignore non-alphabetic
+characters.  Character frequency counts can be used in breaking
+substitution ciphers.
+<PRE>
+((a 484) (b 95) (c 187)  ...)
+</PRE>
+
+<LI> Write <tt>map</tt> and <tt>reduce</tt> methods to count the number
+of occurrences of each word in a file.
+For the purposes of this assignment a word will be defined as any
+string of alphabetic characters appearing between non-alphabetic
+characters. <TT>nature's</TT> is two words.
+The count should be case-insensitive.
+If a word occurs multiple times in a line, all should be counted.
+A <tt>StringTokenizer</tt> is a convenient way to parse the words from
+the input line.  There is documentation of <tt>StringTokenizer</tt>
+online, and there is an example of its use in the <tt>reader</tt>
+functions.
+&nbsp; &nbsp; &nbsp; <TT>
+(justice 3)
+</TT>
+<P>
+<LI> Write <tt>map</tt> and <tt>reduce</tt> methods to perform a
+<tt>grep</tt> to find occurrences of a given string (case-sensitive)
+in a file.
+The desired string is obtained as <tt>mr.parameter()</tt> ; it may
+occur more than once in a given line.  The output should use the
+desired string as a key and give a list of all the line numbers
+(as <tt>Integer</tt>) on which the string occurs.  If a word
+occurs multiple times in a line, the line number should be output
+multiple times.
+<PRE>
+((ther (7 46 52 63 72 73 85 94 116 168 172 182 184)))
+</PRE>
+
+<LI> Write <tt>map</tt> and <tt>reduce</tt> methods to construct an
+index of words in a file.  For each word, the index should give a list
+of the line numbers (as <tt>Integer</tt>) on which the word occurs in
+the file.  The index should be case-insensitive.  If a word
+occurs multiple times in a line, all should be included in the index.
+&nbsp; &nbsp; &nbsp; <TT>
+(without (67 89 107))
+</TT>
+<P>
+<LI> Write <tt>map</tt> and <tt>reduce</tt> methods to determine
+the average ratings of movies.  The input consists of a series
+of lines, each containing a movie number, user number, rating, and
+date:
+&nbsp; &nbsp; &nbsp; <TT>
+3980,294028,5,2005-11-15
+</TT>
+<P>
+<tt>map</tt> should emit movie number and list of rating, and
+<tt>reduce</tt> should return for each movie number a list of
+average rating as <tt>Double</tt>, and number of ratings as
+<tt>Integer</tt>.  This data is similar to the Netflix Prize data.
+</OL>
+
+<P>
+References:
+<OL>
+<LI> <A href="http://research.google.com/archive/mapreduce.html">
+     <tt>http://research.google.com/archive/mapreduce.html</tt>
+     &nbsp; MapReduce Paper </A>
+<LI> <A href="http://www.nytimes.com/2009/03/17/technology/business-computing/17cloud.html">
+<tt>http://www.nytimes.com/2009/03/17/technology/business-computing/17cloud.html</tt>&nbsp; NYT Article on Hadoop</A>
+<LI> <A href="http://hadoop.apache.org/core/">
+     <tt>http://hadoop.apache.org/core/</tt>  &nbsp; Hadoop</A>
+<LI> <A href="lec5-pagerank.ppt">Lecture slides on PageRank</A>
+</OL>
+</BODY>
+</HTML>
+     
